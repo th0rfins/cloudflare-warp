@@ -1,0 +1,14 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+# NOTE: no healthcheck and no startCommand here.
+# - This container exposes raw TCP proxies (SOCKS5 :1080, HTTP :8080,
+#   Shadowsocks :8388), not an HTTP server on $PORT, so Railway's
+#   HTTP healthcheck must stay off.
+# - ENTRYPOINT from the Dockerfile (/entrypoint.sh) is used as-is.
+# - In Railway, expose port 1080 via "TCP Proxy" networking setting
+#   to get a public host:port for the SOCKS5 proxy.
+[deploy]
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
