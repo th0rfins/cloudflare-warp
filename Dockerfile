@@ -20,7 +20,9 @@ COPY entrypoint.sh /entrypoint.sh
 COPY start-warp-instance.sh /start-warp-instance.sh
 COPY ./healthcheck /healthcheck
 
-RUN case ${TARGETPLATFORM} in \
+# NOTE (Railway fix): TARGETPLATFORM is only auto-populated by BuildKit.
+# Default to linux/amd64 when it is empty so plain `docker build` also works.
+RUN case "${TARGETPLATFORM:-linux/amd64}" in \
       "linux/amd64")   ARCH="amd64" ;; \
       "linux/arm64")   ARCH="arm64" ;; \
       *) echo "Unsupported TARGETPLATFORM: ${TARGETPLATFORM}" && exit 1 ;; \
